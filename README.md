@@ -1,18 +1,18 @@
 # Bitpanda WS
 
-Lib to use BitPanda websockets
+A lib to use BitPanda websockets
 
 ## Features
 
-- [] Price ticks
+- [ ] Price ticks
   - [x] Subscription
   - [ ] Unsubscribe
-- [] Candlesticks
+- [ ] Candlesticks
   - [x] Subscription
   - [ ] Unsubscribe
-- [] Order book
+- [ ] Order book
   - [ ] Subscription
   - [ ] Unsubscribe
-- [] Market ticker
+- [ ] Market ticker
   - [ ] Subscription
   - [ ] Unsubscribe

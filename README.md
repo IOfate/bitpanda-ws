@@ -1,6 +1,8 @@
-# Bitpanda WS
+# BitPanda WS
 
-A lib to use BitPanda websockets
+A lib to use BitPanda websockets.
+
+Websocket API documentation: https://developers.bitpanda.com/exchange/?shell#websocket-api-overview
 
 ## Features
 

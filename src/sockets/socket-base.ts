@@ -6,7 +6,7 @@ import { wsUrl } from '../const';
 
 export abstract class SocketBase {
   protected readonly ws: WebSocket;
-  protected readonly subscriptions: string[];
+  protected subscriptions: string[];
   protected isOpen: boolean;
 
   constructor(
@@ -42,6 +42,14 @@ export abstract class SocketBase {
   }
 
   protected abstract onMessage(data: any): void;
+  protected abstract sendSubscription(): void;
+
+  protected sendUnsubscribe() {
+    this.ws.send(JSON.stringify({
+      type: this.getUnsubscribeType,
+      channels: [this.channelName],
+    }));
+  }
 
   protected requireSocketToBeOpen() {
     if (!this.isOpen) {
@@ -53,6 +61,10 @@ export abstract class SocketBase {
     return this.subscriptions.length > 1
       ? 'UPDATE_SUBSCRIPTION'
       : 'SUBSCRIBE';
+  }
+
+  protected getUnsubscribeType() {
+    return 'UNSUBSCRIBE';
   }
 
   protected formatApiSymbol(symbol: string): string {

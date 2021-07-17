@@ -6,12 +6,12 @@ Websocket API documentation: https://developers.bitpanda.com/exchange/?shell#web
 
 ## Features
 
-- [ ] Price ticks
+- [x] Price ticks
   - [x] Subscription
-  - [ ] Unsubscribe
-- [ ] Candlesticks
+  - [x] Unsubscribe
+- [x] Candlesticks
   - [x] Subscription
-  - [ ] Unsubscribe
+  - [x] Unsubscribe
 - [ ] Order book
   - [ ] Subscription
   - [ ] Unsubscribe

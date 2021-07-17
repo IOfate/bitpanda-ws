@@ -23,6 +23,35 @@ export class SocketTicker extends SocketBase {
     }
 
     this.subscriptions.push(formatSymbol);
+    this.sendSubscription();
+  }
+
+  unsubscribe(symbol: string): void {
+    this.requireSocketToBeOpen();
+
+    const formatSymbol = this.formatApiSymbol(symbol);
+    const isInSubscriptions = this.subscriptions.some((marketSymbol: string) => marketSymbol === formatSymbol);
+
+    if (!isInSubscriptions) {
+      return;
+    }
+
+    this.subscriptions = this.subscriptions.filter((fSymbol: string) => fSymbol !== symbol);
+
+    if (this.subscriptions.length) {
+      this.sendSubscription();
+    } else {
+      this.sendUnsubscribe();
+    }
+  }
+
+  protected onMessage(data: RawTicker) {
+    const ticker = this.format(data);
+
+    this.emitter.emit(`ticker-${ticker.symbol}`, ticker);
+  }
+
+  protected sendSubscription() {
     this.ws.send(JSON.stringify({
       type: this.getSubscriptionType(),
       channels: [{
@@ -30,12 +59,6 @@ export class SocketTicker extends SocketBase {
         instrument_codes: this.subscriptions,
       }],
     }));
-  }
-
-  protected onMessage(data: RawTicker) {
-    const ticker = this.format(data);
-
-    this.emitter.emit(`ticker-${ticker.symbol}`, ticker);
   }
 
   private format(rawTicker: RawTicker): Ticker {

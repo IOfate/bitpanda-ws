@@ -15,7 +15,7 @@ export class SocketCandle extends SocketBase {
     super(emitter, 'CANDLESTICKS', 'CANDLESTICK');
   }
 
-  subscribe(symbol: string, timeFrame: string): Emittery {
+  subscribe(symbol: string, timeFrame: string) {
     this.requireSocketToBeOpen();
 
     if (!this.candleTimes.includes(timeFrame)) {
@@ -24,7 +24,6 @@ export class SocketCandle extends SocketBase {
 
     const formatSymbol = symbol.replace('/', '_').toUpperCase();
     const subscription = `${formatSymbol}-${timeFrame}`;
-
     const isInSubscriptions = this.subscriptions.some((candleSub: string) => candleSub === subscription);
 
     if (isInSubscriptions) {
@@ -32,10 +31,27 @@ export class SocketCandle extends SocketBase {
     }
 
     this.subscriptions.push(subscription);
-    this.ws.send(JSON.stringify({
-      type: this.getSubscriptionType(),
-      channels: [this.getCandlesticksChannel()],
-    }));
+    this.sendSubscription();
+  }
+
+  unsubscribe(symbol: string, timeFrame: string) {
+    this.requireSocketToBeOpen();
+
+    const formatSymbol = symbol.replace('/', '_').toUpperCase();
+    const subscription = `${formatSymbol}-${timeFrame}`;
+    const isInSubscriptions = this.subscriptions.some((candleSub: string) => candleSub === subscription);
+
+    if (!isInSubscriptions) {
+      return;
+    }
+
+    this.subscriptions = this.subscriptions.filter((fSub: string) => fSub !== subscription);
+
+    if (this.subscriptions.length) {
+      this.sendSubscription();
+    } else {
+      this.sendUnsubscribe();
+    }
   }
 
   protected onMessage(data: RawCandle) {
@@ -45,6 +61,13 @@ export class SocketCandle extends SocketBase {
     const timeFrame = `${candle.info.granularity.period}${timeUnit}`;
 
     this.emitter.emit(`candle-${candle.symbol}-${timeFrame}`, candle);
+  }
+
+  protected sendSubscription() {
+    this.ws.send(JSON.stringify({
+      type: this.getSubscriptionType(),
+      channels: [this.getCandlesticksChannel()],
+    }));
   }
 
   private format(rawCandle: RawCandle): Candle {

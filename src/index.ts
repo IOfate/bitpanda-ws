@@ -25,7 +25,15 @@ export class BitPandaWs extends Emittery {
     this.socketTicker.subscribe(symbol);
   }
 
+  unsubscribeTicker(symbol: string): void {
+    this.socketTicker.unsubscribe(symbol);
+  }
+
   subscribeCandles(symbol: string, timeFrame: string): void {
     this.socketCandle.subscribe(symbol, timeFrame);
+  }
+
+  unsubscribeCandles(symbol: string, timeFrame: string): void {
+    this.socketCandle.unsubscribe(symbol, timeFrame);
   }
 }

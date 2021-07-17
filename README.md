@@ -1,6 +1,6 @@
 # BitPanda WS
 
-A lib to use BitPanda websockets.
+Node.js websocket client for BitPanda.
 
 Websocket API documentation: https://developers.bitpanda.com/exchange/?shell#websocket-api-overview
 

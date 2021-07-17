@@ -15,7 +15,7 @@ export class SocketCandle extends SocketBase {
     super(emitter, 'CANDLESTICKS', 'CANDLESTICK');
   }
 
-  subscribe(symbol: string, timeFrame: string) {
+  subscribe(symbol: string, timeFrame: string): void {
     this.requireSocketToBeOpen();
 
     if (!this.candleTimes.includes(timeFrame)) {
@@ -24,7 +24,9 @@ export class SocketCandle extends SocketBase {
 
     const formatSymbol = symbol.replace('/', '_').toUpperCase();
     const subscription = `${formatSymbol}-${timeFrame}`;
-    const isInSubscriptions = this.subscriptions.some((candleSub: string) => candleSub === subscription);
+    const isInSubscriptions = this.subscriptions.some(
+      (candleSub: string) => candleSub === subscription,
+    );
 
     if (isInSubscriptions) {
       return;
@@ -34,12 +36,14 @@ export class SocketCandle extends SocketBase {
     this.sendSubscription();
   }
 
-  unsubscribe(symbol: string, timeFrame: string) {
+  unsubscribe(symbol: string, timeFrame: string): void {
     this.requireSocketToBeOpen();
 
     const formatSymbol = symbol.replace('/', '_').toUpperCase();
     const subscription = `${formatSymbol}-${timeFrame}`;
-    const isInSubscriptions = this.subscriptions.some((candleSub: string) => candleSub === subscription);
+    const isInSubscriptions = this.subscriptions.some(
+      (candleSub: string) => candleSub === subscription,
+    );
 
     if (!isInSubscriptions) {
       return;
@@ -54,20 +58,23 @@ export class SocketCandle extends SocketBase {
     }
   }
 
-  protected onMessage(data: RawCandle) {
+  protected onMessage(data: RawCandle): void {
     const candle = this.format(data);
-    const timeUnit = Object.keys(this.mapUnits)
-      .find((timeShortcut: string) => this.mapUnits[timeShortcut] === candle.info.granularity.unit);
+    const timeUnit = Object.keys(this.mapUnits).find(
+      (timeShortcut: string) => this.mapUnits[timeShortcut] === candle.info.granularity.unit,
+    );
     const timeFrame = `${candle.info.granularity.period}${timeUnit}`;
 
     this.emitter.emit(`candle-${candle.symbol}-${timeFrame}`, candle);
   }
 
-  protected sendSubscription() {
-    this.ws.send(JSON.stringify({
-      type: this.getSubscriptionType(),
-      channels: [this.getCandlesticksChannel()],
-    }));
+  protected sendSubscription(): void {
+    this.ws.send(
+      JSON.stringify({
+        type: this.getSubscriptionType(),
+        channels: [this.getCandlesticksChannel()],
+      }),
+    );
   }
 
   private format(rawCandle: RawCandle): Candle {

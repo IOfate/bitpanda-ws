@@ -4,7 +4,7 @@ export interface RawCandle {
   granularity: {
     unit: string;
     period: number;
-  },
+  };
   high: string;
   instrument_code: string;
   last_sequence: number;

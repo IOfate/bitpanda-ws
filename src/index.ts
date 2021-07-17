@@ -15,10 +15,7 @@ export class BitPandaWs extends Emittery {
   }
 
   async open(): Promise<void> {
-    await Promise.all([
-      this.socketTicker.open(),
-      this.socketCandle.open(),
-    ]);
+    await Promise.all([this.socketTicker.open(), this.socketCandle.open()]);
   }
 
   subscribeTicker(symbol: string): void {

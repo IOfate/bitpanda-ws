@@ -25,7 +25,7 @@ export abstract class SocketBase {
       return;
     }
 
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.ws.on('open', () => {
         this.isOpen = true;
 
@@ -46,29 +46,29 @@ export abstract class SocketBase {
     });
   }
 
-  protected abstract onMessage(data: any): void;
+  protected abstract onMessage(data: { [key: string]: any }): void;
   protected abstract sendSubscription(): void;
 
-  protected sendUnsubscribe() {
-    this.ws.send(JSON.stringify({
-      type: this.getUnsubscribeType,
-      channels: [this.channelName],
-    }));
+  protected sendUnsubscribe(): void {
+    this.ws.send(
+      JSON.stringify({
+        type: this.getUnsubscribeType(),
+        channels: [this.channelName],
+      }),
+    );
   }
 
-  protected requireSocketToBeOpen() {
+  protected requireSocketToBeOpen(): void {
     if (!this.isOpen) {
       throw new Error('Please call open before subscribing');
     }
   }
 
-  protected getSubscriptionType() {
-    return this.subscriptions.length > 1
-      ? 'UPDATE_SUBSCRIPTION'
-      : 'SUBSCRIBE';
+  protected getSubscriptionType(): string {
+    return this.subscriptions.length > 1 ? 'UPDATE_SUBSCRIPTION' : 'SUBSCRIBE';
   }
 
-  protected getUnsubscribeType() {
+  protected getUnsubscribeType(): string {
     return 'UNSUBSCRIBE';
   }
 

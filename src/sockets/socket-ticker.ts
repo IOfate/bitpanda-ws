@@ -16,7 +16,9 @@ export class SocketTicker extends SocketBase {
     this.requireSocketToBeOpen();
 
     const formatSymbol = this.formatApiSymbol(symbol);
-    const isInSubscriptions = this.subscriptions.some((marketSymbol: string) => marketSymbol === formatSymbol);
+    const isInSubscriptions = this.subscriptions.some(
+      (marketSymbol: string) => marketSymbol === formatSymbol,
+    );
 
     if (isInSubscriptions) {
       return;
@@ -30,7 +32,9 @@ export class SocketTicker extends SocketBase {
     this.requireSocketToBeOpen();
 
     const formatSymbol = this.formatApiSymbol(symbol);
-    const isInSubscriptions = this.subscriptions.some((marketSymbol: string) => marketSymbol === formatSymbol);
+    const isInSubscriptions = this.subscriptions.some(
+      (marketSymbol: string) => marketSymbol === formatSymbol,
+    );
 
     if (!isInSubscriptions) {
       return;
@@ -45,20 +49,24 @@ export class SocketTicker extends SocketBase {
     }
   }
 
-  protected onMessage(data: RawTicker) {
+  protected onMessage(data: RawTicker): void {
     const ticker = this.format(data);
 
     this.emitter.emit(`ticker-${ticker.symbol}`, ticker);
   }
 
-  protected sendSubscription() {
-    this.ws.send(JSON.stringify({
-      type: this.getSubscriptionType(),
-      channels: [{
-        name: 'PRICE_TICKS',
-        instrument_codes: this.subscriptions,
-      }],
-    }));
+  protected sendSubscription(): void {
+    this.ws.send(
+      JSON.stringify({
+        type: this.getSubscriptionType(),
+        channels: [
+          {
+            name: 'PRICE_TICKS',
+            instrument_codes: this.subscriptions,
+          },
+        ],
+      }),
+    );
   }
 
   private format(rawTicker: RawTicker): Ticker {

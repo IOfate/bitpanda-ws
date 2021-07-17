@@ -7,7 +7,7 @@ import { RawCandle } from './models/raw-candle';
 import { RawTicker } from './models/raw-ticker';
 import { Ticker } from './models/ticker';
 
-export class BitPandaWs {
+export class BitPandaWs extends Emittery {
   private readonly baseUrl = 'wss://streams.exchange.bitpanda.com';
   private readonly tickerChannelName = 'PRICE_TICKS';
   private readonly tickerType = 'PRICE_TICK';
@@ -15,7 +15,6 @@ export class BitPandaWs {
   private readonly candleType = 'CANDLESTICK';
   private readonly candleTimes = ['1m', '5m', '15m', '30m', '1h', '4h', '1d', '1w', '1M'];
   private readonly mapUnits = { m: 'MINUTES', h: 'HOURS', d: 'DAYS', w: 'WEEKS', M: 'MONTHS' };
-  private readonly emitter: Emittery;
   private readonly tickerSubscriptions: string[];
   private readonly candleSubscriptions: string[];
   private readonly wsTicker: WebSocket;
@@ -24,7 +23,7 @@ export class BitPandaWs {
   private isOpenCandle = false;
 
   constructor() {
-    this.emitter = new Emittery();
+    super();
     this.tickerSubscriptions = [];
     this.candleSubscriptions = [];
     this.wsTicker = new WebSocket(this.baseUrl);
@@ -38,7 +37,7 @@ export class BitPandaWs {
     ]);
   }
 
-  subscribeTicker(symbol: string): Emittery {
+  subscribeTicker(symbol: string): void {
     if (!this.isOpenTicker) {
       throw new Error('Please call open before subscribing');
     }
@@ -47,7 +46,7 @@ export class BitPandaWs {
     const isInSubscriptions = this.tickerSubscriptions.some((marketSymbol: string) => marketSymbol === formatSymbol);
 
     if (isInSubscriptions) {
-      return this.emitter;
+      return;
     }
 
     this.tickerSubscriptions.push(formatSymbol);
@@ -58,8 +57,6 @@ export class BitPandaWs {
         instrument_codes: this.tickerSubscriptions,
       }],
     }));
-
-    return this.emitter;
   }
 
   subscribeCandles(symbol: string, timeFrame: string): Emittery {
@@ -77,7 +74,7 @@ export class BitPandaWs {
     const isInSubscriptions = this.candleSubscriptions.some((candleSub: string) => candleSub === subscription);
 
     if (isInSubscriptions) {
-      return this.emitter;
+      return;
     }
 
     this.candleSubscriptions.push(subscription);
@@ -85,8 +82,6 @@ export class BitPandaWs {
       type: this.candleSubscriptions.length > 1 ? 'UPDATE_SUBSCRIPTION' : 'SUBSCRIBE',
       channels: [this.getCandlesticksChannel()],
     }));
-
-    return this.emitter;
   }
 
   private openWsTicker(): Promise<void> {
@@ -104,7 +99,7 @@ export class BitPandaWs {
           if (received.channel_name === this.tickerChannelName && received.type === this.tickerType) {
             const ticker = this.formatRawTicker(received);
 
-            this.emitter.emit(`ticker-${ticker.symbol}`, ticker);
+            this.emit(`ticker-${ticker.symbol}`, ticker);
           }
         });
 
@@ -130,7 +125,7 @@ export class BitPandaWs {
               .find((timeShortcut: string) => this.mapUnits[timeShortcut] === candle.info.granularity.unit);
             const timeFrame = `${candle.info.granularity.period}${timeUnit}`;
 
-            this.emitter.emit(`candle-${candle.symbol}-${timeFrame}`, candle);
+            this.emit(`candle-${candle.symbol}-${timeFrame}`, candle);
           }
         });
         resolve();

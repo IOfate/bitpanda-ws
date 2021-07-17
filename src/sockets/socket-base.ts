@@ -5,19 +5,20 @@ import WebSocket from 'ws';
 import { wsUrl } from '../const';
 
 export abstract class SocketBase {
-  protected errorType = 'ERROR';
-  protected readonly ws: WebSocket;
+  protected readonly errorType = 'ERROR';
+  protected ws: WebSocket;
   protected subscriptions: string[];
   protected isOpen: boolean;
+  protected askingClose: boolean;
 
   constructor(
     protected readonly emitter: Emittery,
     protected readonly channelName: string,
     protected readonly type: string,
   ) {
-    this.ws = new WebSocket(wsUrl);
     this.subscriptions = [];
     this.isOpen = false;
+    this.askingClose = false;
   }
 
   open(): Promise<void> {
@@ -25,9 +26,16 @@ export abstract class SocketBase {
       return;
     }
 
+    this.ws = new WebSocket(wsUrl);
+
     return new Promise((resolve) => {
       this.ws.on('open', () => {
         this.isOpen = true;
+        this.askingClose = false;
+
+        if (this.subscriptions.length) {
+          this.sendSubscription();
+        }
 
         this.ws.on('message', (data: string) => {
           const received = JSON.parse(data);
@@ -38,6 +46,14 @@ export abstract class SocketBase {
 
           if (received.type === this.errorType) {
             this.emitter.emit('error', received);
+          }
+        });
+
+        this.ws.on('close', () => {
+          this.isOpen = false;
+
+          if (!this.askingClose) {
+            this.open();
           }
         });
 
@@ -56,6 +72,8 @@ export abstract class SocketBase {
         channels: [this.channelName],
       }),
     );
+    this.askingClose = true;
+    this.ws.close();
   }
 
   protected requireSocketToBeOpen(): void {

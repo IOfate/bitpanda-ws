@@ -5,6 +5,7 @@ import WebSocket from 'ws';
 import { wsUrl } from '../const';
 
 export abstract class SocketBase {
+  protected errorType = 'ERROR';
   protected readonly ws: WebSocket;
   protected subscriptions: string[];
   protected isOpen: boolean;
@@ -33,6 +34,10 @@ export abstract class SocketBase {
 
           if (received.channel_name === this.channelName && received.type === this.type) {
             this.onMessage(received);
+          }
+
+          if (received.type === this.errorType) {
+            this.emitter.emit('error', received);
           }
         });
 

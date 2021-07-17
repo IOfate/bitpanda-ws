@@ -27,6 +27,8 @@ const main = async () => {
 
   client.on(`ticker-${symbol}`, ticker => console.log(ticker));
   client.on(`candle-${symbol}-${candleTimeFrame}`, candle => console.log(candle));
+  client.on('error', error => console.error(error));
+
   client.subscribeTicker(symbol);
   client.subscribeCandles(symbol, candleTimeFrame);
 };

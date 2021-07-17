@@ -10,10 +10,16 @@ const main = async () => {
   await client.open();
 
   client.subscribeTicker(symbol);
+  client.subscribeTicker('XRP/EUR');
+  client.subscribeTicker('BEST/EUR');
+
   client.subscribeCandles(symbol, candleTimeFrame);
 
   client.on(`ticker-${symbol}`, (ticker: Ticker) => console.log(ticker));
+  client.on('ticker-XRP/EUR', (ticker: Ticker) => console.log(ticker));
+  client.on('ticker-BEST/EUR', (ticker: Ticker) => console.log(ticker));
   client.on(`candle-${symbol}-${candleTimeFrame}`, (candle: Candle) => console.log(candle));
+  client.on('error', error => console.error(error));
 
   setTimeout(() => {
     const symbol2 = 'ETH/EUR';

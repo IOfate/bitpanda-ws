@@ -12,7 +12,7 @@ export class SocketCandle extends SocketBase {
   private readonly mapUnits = { m: 'MINUTES', h: 'HOURS', d: 'DAYS', w: 'WEEKS', M: 'MONTHS' };
 
   constructor(emitter: Emittery) {
-    super(emitter, 'CANDLESTICKS', 'CANDLESTICK');
+    super(emitter, 'CANDLESTICKS', 'CANDLESTICK', 'candle');
   }
 
   subscribe(symbol: string, timeFrame: string): void {

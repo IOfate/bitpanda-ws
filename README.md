@@ -12,6 +12,8 @@ Websocket API documentation: https://developers.bitpanda.com/exchange/?shell#web
 - [x] Candlesticks
   - [x] Subscription
   - [x] Unsubscribe
+- [x] Emit errors by sockets
+- [x] Auto-reconnect
 
 ## How to use it
 
@@ -27,7 +29,8 @@ const main = async () => {
 
   client.on(`ticker-${symbol}`, ticker => console.log(ticker));
   client.on(`candle-${symbol}-${candleTimeFrame}`, candle => console.log(candle));
-  client.on('error', error => console.error(error));
+  client.on('error-ticker', error => console.error(error));
+  client.on('error-candle', error => console.error(error));
 
   client.subscribeTicker(symbol);
   client.subscribeCandles(symbol, candleTimeFrame);

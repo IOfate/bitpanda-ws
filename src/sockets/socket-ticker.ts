@@ -9,7 +9,7 @@ import { SocketBase } from './socket-base';
 
 export class SocketTicker extends SocketBase {
   constructor(emitter: Emittery) {
-    super(emitter, 'PRICE_TICKS', 'PRICE_TICK');
+    super(emitter, 'PRICE_TICKS', 'PRICE_TICK', 'ticker');
   }
 
   subscribe(symbol: string): void {

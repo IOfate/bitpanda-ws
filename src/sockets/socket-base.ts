@@ -15,6 +15,7 @@ export abstract class SocketBase {
     protected readonly emitter: Emittery,
     protected readonly channelName: string,
     protected readonly type: string,
+    protected readonly errorKey: string,
   ) {
     this.subscriptions = [];
     this.isOpen = false;
@@ -45,7 +46,7 @@ export abstract class SocketBase {
           }
 
           if (received.type === this.errorType) {
-            this.emitter.emit('error', received);
+            this.emitter.emit(`error-${this.type}`, received);
           }
         });
 

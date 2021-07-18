@@ -18,6 +18,10 @@ export class BitPandaWs extends Emittery {
     await Promise.all([this.socketTicker.open(), this.socketCandle.open()]);
   }
 
+  isOpen(): boolean {
+    return [this.socketCandle.isOpen(), this.socketTicker.isOpen()].every((open: boolean) => open);
+  }
+
   subscribeTicker(symbol: string): void {
     this.socketTicker.subscribe(symbol);
   }

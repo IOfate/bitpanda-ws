@@ -8,7 +8,7 @@ export abstract class SocketBase {
   protected readonly errorType = 'ERROR';
   protected ws: WebSocket;
   protected subscriptions: string[];
-  protected isOpen: boolean;
+  protected socketOpen: boolean;
   protected askingClose: boolean;
 
   constructor(
@@ -18,12 +18,16 @@ export abstract class SocketBase {
     protected readonly errorKey: string,
   ) {
     this.subscriptions = [];
-    this.isOpen = false;
+    this.socketOpen = false;
     this.askingClose = false;
   }
 
+  isOpen(): boolean {
+    return this.socketOpen;
+  }
+
   open(): Promise<void> {
-    if (this.isOpen) {
+    if (this.socketOpen) {
       return;
     }
 
@@ -31,7 +35,7 @@ export abstract class SocketBase {
 
     return new Promise((resolve) => {
       this.ws.on('open', () => {
-        this.isOpen = true;
+        this.socketOpen = true;
         this.askingClose = false;
 
         if (this.subscriptions.length) {
@@ -51,7 +55,7 @@ export abstract class SocketBase {
         });
 
         this.ws.on('close', () => {
-          this.isOpen = false;
+          this.socketOpen = false;
 
           if (!this.askingClose) {
             this.open();

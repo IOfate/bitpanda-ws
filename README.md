@@ -72,6 +72,22 @@ const bitPandaWs = new BitPandaWs();
 await bitPandaWs.open();
 ```
 
+### bitPandaWs.isOpen()
+
+To know if sockets are open or not.
+
+Returns a boolean.
+
+```js
+import { BitPandaWs } from '@iofate/bitpanda-ws';
+
+const bitPandaWs = new BitPandaWs();
+
+if (!bitPandaWs.isOpen()) {
+  await bitPandaWs.open();
+}
+```
+
 ### bitPandaWs.subscribeTicker(symbol)
 
 Subscribe to the websocket ticker of the chosen symbol.
@@ -87,7 +103,6 @@ await bitPandaWs.open();
 bitPandaWs.subscribeTicker('BTC/EUR');
 bitPandaWs.on('ticker-BTC/EUR', ticker => console.log(ticker));
 ```
-
 
 ### bitPandaWs.unsubscribeTicker(symbol)
 

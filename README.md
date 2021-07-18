@@ -1,8 +1,11 @@
 # BitPanda WS
 
 Node.js websocket client for BitPanda.
-
 Websocket API documentation: https://developers.bitpanda.com/exchange/?shell#websocket-api-overview
+
+## IOfate
+
+This package is made by the IOfate company and is open source, feel free to use and share it!
 
 ## Features
 
@@ -18,7 +21,7 @@ Websocket API documentation: https://developers.bitpanda.com/exchange/?shell#web
 ## How to use it
 
 ```js
-import { BitPandaWs } from 'bitpanda-ws';
+import { BitPandaWs } from '@iofate/bitpanda-ws';
 
 const main = async () => {
   const client = new BitPandaWs();

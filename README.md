@@ -1,5 +1,7 @@
 # BitPanda WS
 
+[![Node.js CI](https://github.com/IOfate/bitpanda-ws/actions/workflows/node.js.yml/badge.svg?branch=main)](https://github.com/IOfate/bitpanda-ws/actions/workflows/node.js.yml)
+
 Node.js websocket client for BitPanda.
 Websocket API documentation: https://developers.bitpanda.com/exchange/?shell#websocket-api-overview
 

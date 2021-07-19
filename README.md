@@ -1,6 +1,9 @@
 # BitPanda WS
 
 [![Node.js CI](https://github.com/IOfate/bitpanda-ws/actions/workflows/node.js.yml/badge.svg?branch=main)](https://github.com/IOfate/bitpanda-ws/actions/workflows/node.js.yml)
+[![npm version](https://img.shields.io/npm/v/@iofate/bitpanda-ws)](https://www.npmjs.com/package/@iofate/bitpanda-ws)
+[![dependencies Status](https://status.david-dm.org/gh/iofate/bitpanda-ws.svg)](https://david-dm.org/iofate/bitpanda-ws)
+[![devDependencies Status](https://status.david-dm.org/gh/iofate/bitpanda-ws.svg?type=dev)](https://david-dm.org/iofate/bitpanda-ws?type=dev)
 
 Node.js websocket client for BitPanda.
 Websocket API documentation: https://developers.bitpanda.com/exchange/?shell#websocket-api-overview
